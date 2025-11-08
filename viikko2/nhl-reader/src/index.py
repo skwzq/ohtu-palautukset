@@ -13,11 +13,10 @@ def main():
 
     country = input("Print players from: ")
 
-    print(f"Players from {country}:")
+    print(f"\nPlayers from {country}:")
 
-    for player in players:
-        if player.nationality == country:
-            print(player)
+    for player in sorted((p for p in players if p.nationality == country), key=lambda p: p.points(), reverse=True):
+        print(player)
 
 if __name__ == "__main__":
     main()

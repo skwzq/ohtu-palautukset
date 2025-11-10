@@ -1,8 +1,8 @@
-from playerreader import PlayerReader
-from playerstats import PlayerStats
-from rich import print
+from rich import print # pylint: disable=redefined-builtin
 from rich.prompt import Prompt
 from rich.table import Table
+from playerreader import PlayerReader
+from playerstats import PlayerStats
 
 def main():
     seasons = [f"20{i}-{i+1}" for i in range(18, 26)]
@@ -18,20 +18,23 @@ def main():
     while True:
         nationality = Prompt.ask("Nationality", choices=nationalities)
         players = stats.top_scorers_by_nationality(nationality)
+        print_table(season, nationality, players)
 
-        table = Table(title=f"Season {season} players from {nationality}")
+def print_table(season, nationality, players):
+    table = Table(title=f"Season {season} players from {nationality}")
 
-        table.add_column("name", style="cyan")
-        table.add_column("teams", style="magenta")
-        table.add_column("goals", justify="right", style="green")
-        table.add_column("assists", justify="right", style="green")
-        table.add_column("points", justify="right", style="yellow")
-        table.add_column("games", justify="right", style="red")
+    columns = [("name", "left", "cyan"), ("teams", "left", "magenta"),
+               ("goals", "right", "green"), ("assists", "right", "green"),
+               ("points", "right", "yellow"), ("games", "right", "red")]
 
-        for player in players:
-            table.add_row(player.name, player.team, str(player.goals), str(player.assists), str(player.points()), str(player.games))
+    for column in columns:
+        table.add_column(column[0], justify=column[1], style=column[1])
 
-        print(table)
+    for player in players:
+        table.add_row(player.name, player.team, str(player.goals), str(player.assists),
+                      str(player.points()), str(player.games))
+
+    print(table)
 
 if __name__ == "__main__":
     main()
